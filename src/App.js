@@ -1,42 +1,32 @@
-import * as React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
+import { Routes, Route } from "react-router-dom";
+import LayoutHome from "./layout/Home.jsx";
+
+import Loader from "./components/Loader.jsx";
+const Users = lazy(() => import("./views/Users.jsx"));
+const StarWars = lazy(() => import("./views/StarWars.jsx"));
 
 export default function App() {
 	return (
-		<div className="App">
-			<span className="text-3xl font-bold">Welcome to React Router!</span>
+		<LayoutHome>
 			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="about" element={<About />} />
+				<Route
+					path="/"
+					element={
+						<Suspense delayMs={500} fallback={<Loader />}>
+							<Users />
+						</Suspense>
+					}
+				/>
+				<Route
+					path="/starwars"
+					element={
+						<Suspense delayMs={500} fallback={<Loader />}>
+							<StarWars />
+						</Suspense>
+					}
+				/>
 			</Routes>
-		</div>
-	);
-}
-
-function Home() {
-	return (
-		<>
-			<main>
-				<h2>Welcome to the homepage!</h2>
-				<p>You can do this, I believe in you.</p>
-			</main>
-			<nav>
-				<Link to="/about">About</Link>
-			</nav>
-		</>
-	);
-}
-
-function About() {
-	return (
-		<>
-			<main>
-				<h2>Who are we?</h2>
-				<p>That feels like an existential question, don't you think?</p>
-			</main>
-			<nav>
-				<Link to="/">Home</Link>
-			</nav>
-		</>
+		</LayoutHome>
 	);
 }
